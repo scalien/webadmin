@@ -18,8 +18,7 @@ function init()
 	scaliendb.onResponse = onResponse;
 	scaliendb.disconnect();
 	
-	//scaliendb.controller = 'fly.home:8080/json/';//utils.parseConnectionLocation();
-	scaliendb.controller = '192.168.137.101:8080/json/';//utils.parseConnectionLocation();
+	scaliendb.controller = utils.parseConnectionLocation();
 	scaliendb.developer = utils.parseDeveloperMode();
 
 	updateGui();
