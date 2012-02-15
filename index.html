@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="description" content="ScalienDB Management Console" />
+		<meta name="author" content="Scalien" />
+		
+		<title>ScalienDB Management Console</title>
+		
+		<!-- Stylesheets -->
+		<link rel="stylesheet" type="text/css" href="assets/plugins/bootstrap/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="assets/plugins/jquery/ui-smoothness/jquery-ui-1.8.16.custom.css" />
+		<link rel="stylesheet" type="text/css" href="assets/plugins/treeview/jquery.treeview.css" />
+		<link rel="stylesheet" type="text/css" href="assets/css/common.css" />
+		
+		<!-- JavaScripts -->
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9">
+		<!--[if IE]>
+		<script type="text/javascript" src="assets/plugins/dygraphs/excanvas.js"></script>
+		<![endif]-->
+		<script type="text/javascript" src="assets/plugins/jquery/jquery.js"></script>
+		<script type="text/javascript" src="assets/plugins/jquery/jquery.cookie.js"></script>
+		<script type="text/javascript" src="assets/plugins/jquery/jquery-ui.js"></script>
+		<script type="text/javascript" src="assets/plugins/treeview/jquery.treeview.js"></script>
+		<script type="text/javascript" src="assets/plugins/treeview/jquery.treeview.edit.js"></script>
+		<script type="text/javascript" src="assets/plugins/dygraphs/dygraph-combined.js"></script>
+		<script type="text/javascript" src="assets/js/utils.js"></script>
+		<script type="text/javascript" src="assets/js/html_codes.js"></script>
+		<script type="text/javascript" src="assets/js/input_fields_dialog.js"></script>
+		<script type="text/javascript" src="assets/js/confirm_dialog.js"></script>
+		<script type="text/javascript" src="assets/js/scaliendb.js"></script>
+		<script type="text/javascript" src="assets/js/quorum_list_view.js"></script>
+		<script type="text/javascript" src="assets/js/quorum_view.js"></script>
+		<script type="text/javascript" src="assets/js/server_list_view.js"></script>
+		<script type="text/javascript" src="assets/js/database_list_view.js"></script>
+		<script type="text/javascript" src="assets/js/table_list_view.js"></script>
+		<script type="text/javascript" src="assets/js/table_view.js"></script>
+		<script type="text/javascript" src="assets/js/dashboard_view.js"></script>
+		<script type="text/javascript" src="assets/js/tree_menu.js"></script>
+		<script type="text/javascript" src="assets/js/gui.js"></script>
+	</head>
+	<body>
+		<div class="topbar">
+			<div class="topbar-inner">
+				<div class="container">
+					<a href="http://www.scalien.com" target="_blank" class="brand" style="padding: 10px 20px;">
+						<img src="assets/images/scalien_logo.png" alt="Scalien logo" />
+					</a>
+					<button id="logout_button" class="btn">Logout and reconnect</button>
+					<span id="controller_info_stripe"></span>
+				</div>
+			</div>
+		</div>
+		<div class="container-fluid">
+			<div class="sidebar">
+				<div id="tree_menu_box">
+					<ul id="tree_menu" class="filetree">
+						<li>
+							<span class="file"><a class="tree_menu_item" controller="dashboardView">Dashboard</a></span>
+						</li>
+						<li>
+							<span class="file"><a class="tree_menu_item" controller="serverListView">Servers</a></span>
+						</li>
+						<li><span id="tree_menu_quorums" class="folder"><a class="tree_menu_item" controller="quorumListView">Quorums</a></span>
+							<ul id="tree_menu_quorum_list">
+								<!--<li><span class="file"><a class="tree_menu_item">Quorum1</a></span></li> DEV TIME GUIDE -->
+							</ul>
+						</li>
+						<li><span id="tree_menu_databases" class="folder"><a class="tree_menu_item" controller="databaseListView">Databases</a></span>
+							<ul id="tree_menu_database_list">
+								<!--<li><span class="file"><a class="tree_menu_item">Database1</a></span></li> DEV TIME GUIDE
+								<li><span class="folder"><a class="tree_menu_item">Database3</a></span>
+									<ul>
+										<li><span class="file"><a class="tree_menu_item">Table1</a></span></li>
+										<li><span class="file"><a class="tree_menu_item">Table2</a></span></li>
+										<li><span class="file"><a class="tree_menu_item">Table3</a></span></li>
+									</ul>
+								</li> -->
+								
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div id="main_container" class="content">
+				<!-- Dashboard -->
+				<div id="dashboard_view">
+					<div class="page-header">
+						<h1>Dashboard
+						<small></small></h1>
+					</div>
+					<div class="row">
+						<div class="span4"><h2>Status</h2></div>
+						<div class="span11">
+							<span id="dashboard_view_cluster_state">
+							</span>
+						</div>
+					</div>
+					<div id="dashboard_server_alerts" class="row" style="display:none;">
+						<div class="span4">&nbsp;</div>
+						<div class="span11">
+							<div id="dashboard_controller_alerts">
+							</div>
+							<div id="dashboard_shardserver_alerts">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="span4"><h2>Demo chart1</h2></div>
+						<div class="span11">
+							<div id="graphdiv1" style="width:600px; height:250px;"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="span4"><h2>Demo chart2</h2></div>
+						<div class="span11">
+							<div id="graphdiv2" style="width:600px; height:250px;"></div>
+						</div>
+					</div>
+				</div>
+				<!-- QuorumList -->
+				<div id="quorum_list_view" style="display:none;">
+					<div class="page-header">
+						<h1>Quorums</h1>
+						<button id="quorum_list_view_new_quorum" class="btn success">New quorum</button>
+					</div>
+					<div id="quorum_list_view_box">
+					</div>
+				</div>
+				<!-- Quorum -->
+				<div id="quorum_view" style="display:none;">
+					<div class="page-header">
+						<h1></h1>
+						<button id="quorum_view_delete_quorum" class="btn danger">Delete</button>
+						<button id="quorum_view_rename_quorum" class="btn">Rename</button>
+						<button id="quorum_view_remove_node" class="btn">Remove server</button>
+						<button id="quorum_view_add_node" class="btn success">Add server</button>
+					</div>
+					<div class="row">
+						<h2 class="span3">Quorum info</h2>
+						<div id="quorum_view_info" class="span9">
+							<div>
+								<span>Quorum number:</span>
+								<span class="quorumNumber"></span>
+							</div>
+							<div>
+								<span>Replication round:</span>
+								<span class="repl"></span>
+							</div>
+							<div>
+								<span>&nbsp;</span>
+							</div>
+							<div>
+								<span>Explanation:</span><br/>
+								<span class="explanation"></span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<h2 class="span3">Shardservers</h2>
+						<div id="quorum_view_shardservers" class="span9">
+						</div>
+					</div>
+					<div class="row">
+						<h2 class="span3">Shards</h2>
+						<div id="quorum_view_shards" class="span9">
+						</div>
+					</div>
+				</div>
+				<!-- ServerList -->
+				<div id="server_list_view" style="display:none;">
+					<div class="page-header">
+						<h1>Servers
+						<small></small></h1>
+					</div>
+					<div class="row">
+						<div class="span4"><h2>Controllers</h2></div>
+						<div class="span11">
+							<div id="controller_list_view_box">
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="span4"><h2>Shardservers</h2></div>
+						<div class="span11">
+							<div id="shardserver_list_view_box">
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- DatabaseList -->
+				<div id="database_list_view" style="display:none;">
+					<div class="page-header">
+						<h1>Databases
+						<small></small></h1>
+						<button id="database_list_view_new_database" class="btn success">New database</button>
+					</div>
+					<div id="database_list_view_box">
+					</div>
+				</div>
+				<!-- TableList -->
+				<div id="table_list_view" style="display:none;">
+					<div class="page-header">
+						<h1><span id="table_list_view_database_name"></span>
+						<small></small>
+						</h1>
+						<button id="table_list_view_delete_table" class="btn danger">Delete</button>
+						<button id="table_list_view_rename_table" class="btn">Rename</button>
+						<button id="table_list_view_new_table" class="btn success">New table</button>
+					</div>
+					<div id="table_list_view_box">
+					</div>
+				</div>
+				<!-- TableView -->
+				<div id="table_view" style="display:none;">
+					<div class="page-header">
+						<h1 id="table_view_table_name"></h1>
+						<button id="table_view_delete" class="btn danger">Delete</button>
+						<button id="table_view_truncate" class="btn danger">Truncate</button>
+						<button id="table_view_freeze" class="btn">Freeze</button>
+						<button id="table_view_unfreeze" class="btn">Unfreeze</button>
+						<button id="table_view_rename" class="btn">Rename</button>
+					</div>
+					<div class="row">
+						<h2 class="span3">Table info</h2>
+						<div id="table_view_info" class="span9">
+							<div>
+								<span>Table number:</span>
+								<span class="tableNumber"></span>
+							</div>
+							<div>
+								<span>Mapped quorums:</span>
+								<span class="mappedQuorums"></span>
+							</div>
+							<div>
+								<span>Replication factor:</span>
+								<span class="repl_factor"></span>
+							</div>
+							<div>
+								<span>Shard splitting frozen:</span>
+								<span class="frozen"></span>
+							</div>
+							<div>
+								<span>Size:</span>
+								<span class="size"></span>
+							</div>
+						</div>
+					</div>
+					<div class="page-header">
+						<h2>Shards</h2>
+						<button id="table_view_unfreeze" class="btn">Fold all</button>
+						<button id="table_view_rename" class="btn">Unfold all</button>
+					</div>
+					<div class="row">
+						<div id="table_view_shards">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="dialogs_container">
+			<div id="input_fields_dialog" style="display:none;">
+				<form id="inputFieldsForm">
+					<fieldset>
+						<legend id="input_fields_dialog_legend"></legend>
+					</fieldset>
+				</form>
+			</div>
+			<div id="confirm_dialog" style="display:none;">
+				<form id="confirmForm">
+					<fieldset>
+						<legend id="confirm_dialog_legend"></legend>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>

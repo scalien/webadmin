@@ -1,0 +1,275 @@
+/* Common style changes */
+
+body { padding-top:62px; }
+
+div.clear {
+	clear:both;
+}
+
+h2 {
+	font-size:18px;
+	word-wrap:break-word;
+}
+
+/* Topbar */
+button#logout_button {
+	float:right;
+	margin-top:7px;
+}
+
+span#controller_info_stripe {
+	float:right;
+	display:inline-block;
+	color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 120;
+    line-height: 1;
+    padding: 14px 20px 12px;
+}
+
+div.sidebar {
+	border: 1px solid #222222;
+	border-radius: 6px;
+	min-height:620px;
+	overflow:hidden;
+	float:none;
+	position:absolute;
+}
+
+div.content {
+	border: 1px solid #222222;
+	border-radius: 6px;
+	min-height:800px;
+}
+
+div#tree_menu_box {
+	margin:5px 10px;
+}
+
+div#tree_menu_box a {
+    color: #000000;
+	cursor: pointer;
+}
+div#tree_menu_box a:hover {
+    text-decoration: none;
+}
+
+div#main_container {
+	padding:10px 20px;
+}
+
+div#main_container div.row {
+	margin-bottom:30px;
+	/*max-height:120px;*/
+}
+
+div.page-header {
+	height:40px;
+}
+
+div.page-header h1, div.page-header h2 {
+	width:420px;
+	float:left;
+	overflow:hidden;
+}
+
+div.page-header button{
+	margin-left:6px;
+	float:right;
+}
+
+/* Dashboard */
+div#dashboard_view span.highlighted {
+	font-weight:bold;
+}
+
+span.status-message {
+    border-radius: 8px 8px 8px 8px;
+    box-shadow: 2px 2px 5px -2px #000000;
+    color: black;
+    font-weight: bold;
+    padding: 10px 20px;
+	display:inline-block;
+	margin-left:30px;
+}
+
+span.status-message.healthy {
+	background-color:#4ba54b;
+}
+
+span.status-message.unhealthy {
+	background-color:#CCFF66;
+}
+
+span.status-message.critical {
+	background-color:#993333;
+}
+
+div#dashboard_controller_alerts > div, div#dashboard_shardserver_alerts > div
+{
+	background-color:#ff9900;
+    border-radius: 8px 8px 8px 8px;
+    box-shadow: 2px 2px 5px -2px #000000;
+    color: black;
+    font-weight: bold;
+    padding: 6px 20px;
+	display:inline-block;
+	margin:4px 0px 4px 30px;
+}
+
+/* QuorumView */
+
+div#quorum_view_info{
+	border-radius: 8px 8px 8px 8px;
+	padding:6px;
+}
+
+div#quorum_view_info.critical{
+	background-color:#993333;
+}
+
+div#quorum_view_shards span.shard-number {
+	display:inline-block;
+	margin:2px;
+	border-radius: 2px 2px 2px 2px;
+    box-shadow: 1px 1px 2px -1px #000000;
+	background-color:#bbbbff;
+}
+
+div#quorum_view_shardservers > div {
+	border-radius: 8px 8px 8px 8px;
+    box-shadow: 2px 2px 5px -2px #000000;
+    color: black;
+    font-weight: bold;
+    padding: 8px;
+    margin: 4px;
+	display:block;
+}
+
+div#quorum_view_shardservers > div.healthy{
+	background-color:#6ca3ff;
+}
+
+div#quorum_view_shardservers > div.no-heartbeat{
+	background-color:#ff9900;
+}
+
+div#quorum_view_shardservers a.activate {
+	cursor:pointer;
+}
+
+/* ServerList */
+
+div#controller_list_view_box > div, div#shardserver_list_view_box > div {
+	border-radius: 8px 8px 8px 8px;
+    box-shadow: 2px 2px 5px -2px #000000;
+    color: black;
+    font-weight: bold;
+    padding: 8px;
+    margin: 4px;
+	display:block;
+}
+
+div#controller_list_view_box > div.master{
+	background-color:#336699;
+}
+
+div#controller_list_view_box > div.healthy, div#shardserver_list_view_box > div.healthy{
+	background-color:#6ca3ff;
+}
+
+div#controller_list_view_box > div.no-heartbeat, div#shardserver_list_view_box > div.no-heartbeat{
+	background-color:#ff9900;
+}
+
+div#controller_list_view_box > div > span.node_id, div#shardserver_list_view_box > div > span.node_id {
+	width:40px;
+	display:inline-block;
+}
+
+div#controller_list_view_box > div > span.endpoint, div#shardserver_list_view_box > div > span.endpoint {
+	width:190px;
+	display:inline-block;
+}
+
+div#controller_list_view_box > div > span.status, div#shardserver_list_view_box > div > span.status {
+	width:120px;
+	display:inline-block;
+}
+
+div#shardserver_list_view_box > div > a {
+	color:black;
+	cursor:pointer;
+	display:inline-block;
+	margin-left:20px;
+}
+
+/* QuorumList */
+div#quorum_list_view div.btn_box {
+	width:120px;
+	display: inline;
+    float: right;
+    margin-left: 20px;
+	text-align:right;
+}
+
+div#quorum_list_view button {
+	width:118px;
+}
+
+div#quorum_list_view div.btn_box button {
+	margin-bottom:6px;
+}
+
+/* DatabaseList */
+div#database_list_view div.btn_box {
+	width:120px;
+	display: inline;
+    float: right;
+    margin-left: 20px;
+	text-align:right;
+}
+
+div#database_list_view button {
+	width:118px;
+}
+
+div#database_list_view div.btn_box button {
+	margin-bottom:6px;
+}
+
+/* TableList */
+div#table_list_view div.btn_box {
+	width:120px;
+	display: inline;
+    float: right;
+    margin-left: 20px;
+	text-align:right;
+}
+
+div#table_list_view button {
+	width:118px;
+}
+
+div#table_list_view div.btn_box button {
+	margin-bottom:6px;
+}
+
+/* TableView */
+div#table_view_shards > div {
+	padding:8px;
+	border-radius: 8px 8px 8px 8px;
+    box-shadow: 2px 2px 5px -2px #000000;
+	margin-left:20px;
+	margin-bottom:10px;
+	height:130px;
+	background-color:#cccccc;
+}
+
+div#table_list_view div.btn_box{
+	width:120px;
+	display: inline;
+    float: right;
+    margin-left: 20px;
+	text-align:right;
+}
