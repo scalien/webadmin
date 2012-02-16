@@ -112,59 +112,10 @@ var utils =
 			return "" + defval;
 		}
 		return "" + val;
+	},
+	
+	caseInsensitiveCompare: function(a, b)
+	{
+		return a["name"].toLowerCase().localeCompare(b["name"].toLowerCase());
 	}
-	
-	/*elem: function(id)
-	{
-		return document.getElementById(id);
-	},
-
-	keys: function(arr)
-	{
-		var r = new Array();
-		for (var key in arr)
-			r.push(key);
-		return r;
-	},
-
-   removeKey: function(arr, key)
-	{
-		var n = new Array();
-		for (var i in arr)
-			if (i != key)
-				n.push(arr[i]);	
-		return n;
-	},
-
-	removeElement: function(id)
-	{
-		e = this.elem(id);
-		e.parentNode.removeChild(e);
-	},
-
-	padString: function(str, width, pad)
-	{
-		str = "" + str;
-		while (str.length < width)
-			str = pad + str;
-
-		return str;
-	},
-
-	escapeQuotes: function(str)
-	{
-		str = str.replace(/'/g, "\\x27");
-		str = str.replace(/\"/g, "\\x22");
-		return str;
-	},
-
-	clear: function(node)
-	{
-		while (node.childNodes.length > 0)
-		{
-			node.removeChild(node.firstChild);
-		}
-	},
-	
-*/
 }	

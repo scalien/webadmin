@@ -26,6 +26,11 @@ function init()
 
 function updateGui(configState)
 {
+	if (configState)
+	{
+		configState.databases.sort(utils.caseInsensitiveCompare);
+	}
+	
 	utils.trace({'updateGui':configState});
 
 	// update topbar
