@@ -5,9 +5,24 @@ var tableView =
 	
 	tableID:null,
 	
+	ininted:false,
+	
 	getSelf:function()
 	{
 		return $('#'+tableView.id);
+	},
+	
+	init: function()
+	{
+		$('#table_view_fold_shards').click(function() {
+			$('#table_view_shards').children().addClass('folded');
+		});
+		
+		$('#table_view_unfold_shards').click(function() {
+			$('#table_view_shards').children().removeClass('folded');
+		});
+		
+		// TODO click actions
 	},
 	
 	update: function(configState, tableID)
@@ -16,6 +31,12 @@ var tableView =
 		{
 			// TODO empty list
 			return;
+		}
+		
+		if (!tableView.inited)
+		{
+			tableView.inited = true;
+			tableView.init();
 		}
 		
 		if (!tableID)
@@ -125,7 +146,9 @@ var tableView =
 				var le = htmlCodes.tableViewShardListItem;
 				$(le).attr('id', 'shard_list_item_' + shard.shardID)
 					.attr('mark', 'ext')
-					.find('h2').html('Shard ' + shard.shardID)
+					.find('h2')
+						.html('Shard ' + shard.shardID)
+						.click(function() { $(this).parent().toggleClass('folded'); })
 					.end()
 					.find('span.quorum').html(shard.quorumID + '('+ details.shards[i].state +')')
 					.end()
@@ -138,6 +161,16 @@ var tableView =
 					.find('span.split_key').html(split_key)
 					.end()
 					.find('span.size').html(utils.humanBytes(shard.shardSize))
+					.end()
+					.find('button.split_shard')
+						.attr('rel', shard.shardID)
+						.click(tableView.splitShardClick)
+						.css('display', shard["isSplitable"] ? 'inline-block' : 'none')
+					.end()
+					.find('button.migrate_shard')
+						.attr('rel', shard.shardID)
+						.click(tableView.migrateShardClick)
+						.css('display', (configState.quorums.length > 1) ? 'inline-block' : 'none')
 					.end()
 				.appendTo('#table_view_shards');
 			}
@@ -165,7 +198,16 @@ var tableView =
 					
 				if (le.find('span.size').html() != utils.humanBytes(shard.shardSize))
 					le.find('span.size').html(utils.humanBytes(shard.shardSize));
+				
+				if (shard["isSplitable"])
+					le.find('button.split_shard').show();
+				else
+					le.find('button.split_shard').hide();
 					
+				if ((configState.quorums.length > 1))
+					le.find('button.migrate_shard').show();
+				else
+					le.find('button.migrate_shard').hide();
 			}
 		}
 		// remove unmarked
@@ -229,6 +271,48 @@ var tableView =
 		inputFieldsDialog.show();
 	},
 	
+	migrateShard: function(data)
+	{
+		scaliendb.migrateShard(data.shardID, data.quorumID);
+	},
+	
+	migrateShardClick: function()
+	{
+		var shardID = $(this).attr('rel');
+		
+		if (!lastConfigState.hasOwnProperty("quorums")) return false;
+		
+		var options = Object();
+		// populate quorumIDs
+		for (var q in lastConfigState["quorums"])
+		{
+			var quorum = lastConfigState["quorums"][q];
+			if (!quorum.hasOwnProperty("quorumID"))
+				continue;
+			
+			var quorumID = quorum["quorumID"];
+			options[quorumID] = quorumID;
+		}
+		inputFieldsDialog.clearAndInit('Migrate shard', tableView.migrateShard);
+		inputFieldsDialog.addField('shardID', 'hidden', '', shardID);
+		inputFieldsDialog.addField('quorumID', 'select', 'Migrate to quorum:', null, {'options':options});
+		inputFieldsDialog.show();
+	},
+	
+	splitShard: function(data)
+	{
+		scaliendb.splitShard(data.shardID, data.key);
+	},
+	
+	splitShardClick: function()
+	{
+		var shardID = $(this).attr('rel');
+		inputFieldsDialog.clearAndInit('Split shard', tableView.splitShard);
+		inputFieldsDialog.addField('shardID', 'hidden', '', shardID);
+		inputFieldsDialog.addField('key', 'text', 'Split key:');
+		inputFieldsDialog.show();
+	},
+	
 	getTableDetails: function(table, configState)
 	{
 		var details = Object();
@@ -250,7 +334,7 @@ var tableView =
 			
 			details.shards.push({
 				'shardID':shardID,
-				'state':scaliendb.getQuorumState(configState, shard["quorumID"])});
+				'state':scaliendb.getQuorumState(scaliendb.getQuorum(configState, shard["quorumID"]))});
 			
 			quorumID = shard["quorumID"];
 			if (!utils.contains(quorumIDs, quorumID))
@@ -268,7 +352,7 @@ var tableView =
 		{
 			details.quorums.push({
 				'quorumID':quorumIDs[i],
-				'state':scaliendb.getQuorumState(configState, quorumIDs[i])});
+				'state':scaliendb.getQuorumState(scaliendb.getQuorum(configState, quorumIDs[i]))});
 		}
 	
 		return details;

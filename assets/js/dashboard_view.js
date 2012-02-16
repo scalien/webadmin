@@ -62,7 +62,7 @@ var dashboardView =
 		if (!dashboardView.demoStarted)
 		{
 			dashboardView.demoStarted = true;
-			dashboardView.startDemo();
+			//dashboardView.startDemo();
 		}
 		
 		$("#dashboard_view_cluster_state")

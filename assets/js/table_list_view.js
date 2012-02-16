@@ -148,7 +148,6 @@ var tableListView =
 	
 	createTableClick: function(shardID)
 	{
-		// TODO validate input data
 		var databaseID = $(this).attr('rel');
 		
 		if (!lastConfigState.hasOwnProperty("quorums")) return false;

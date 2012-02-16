@@ -2,7 +2,7 @@ var utils =
 {
 	trace: function(obj)
 	{
-		console.log(obj);
+		//console.log(obj);
 	},
 	
 	parseConnectionLocation: function()

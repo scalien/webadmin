@@ -71,7 +71,7 @@ var htmlCodes =
 		</div>\
 	</div>',
 	'tableViewShardListItem':
-	'<div>\
+	'<div class="folded">\
 		<h2 class="span3"></h2>\
 		<div class="span9">\
 			<div>\

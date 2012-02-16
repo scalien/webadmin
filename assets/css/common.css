@@ -266,6 +266,24 @@ div#table_view_shards > div {
 	background-color:#cccccc;
 }
 
+div#table_view_shards > div > h2 {
+	cursor:pointer;
+}
+
+div#table_view_shards > div.folded {
+	height:32px;
+}
+
+div#table_view_shards > div.folded > h2 {
+    display: block;
+    float: none;
+	width:auto;
+}
+
+div#table_view_shards > div.folded > div {
+	display:none;
+}
+
 div#table_list_view div.btn_box{
 	width:120px;
 	display: inline;
