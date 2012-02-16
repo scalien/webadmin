@@ -18,7 +18,6 @@ function init()
 	scaliendb.onResponse = onResponse;
 	scaliendb.disconnect();
 	
-	scaliendb.controller = utils.parseConnectionLocation();
 	scaliendb.developer = utils.parseDeveloperMode();
 
 	updateGui();
