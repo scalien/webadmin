@@ -1,5 +1,6 @@
 var lastConfigState = null;
 var timer;
+var lastReplicationRounds = {};
 
 // onLoad
 $(function() {
@@ -19,7 +20,9 @@ function init()
 	scaliendb.disconnect();
 	
 	scaliendb.developer = utils.parseDeveloperMode();
-
+	
+	dashboardView.init(getReplicationDeltas);
+	
 	updateGui();
 }
 
@@ -57,6 +60,25 @@ function sortConfigStateNames(configState)
 	}
 }
 
+function getReplicationDeltas()
+{
+	if (lastConfigState == null)
+		return;
+
+	var deltas = [];
+	for (var q in lastConfigState.quorums)
+	{
+		var quorum = lastConfigState.quorums[q];
+		var diff = 0;
+		if (lastReplicationRounds.hasOwnProperty(quorum.quorumID))
+			diff = quorum.paxosID - lastReplicationRounds[quorum.quorumID];
+		
+		lastReplicationRounds[quorum.quorumID] = quorum.paxosID;
+		deltas.push(diff);
+	}
+	return deltas;
+}
+
 function updateGui(configState)
 {
 	if (configState)
@@ -82,6 +104,7 @@ function updateGui(configState)
 	tableListView.update(configState);
 	tableView.update(configState);
 	
+	lastConfigState = configState;
 	dashboardView.update(configState);
 }
 

@@ -2,6 +2,9 @@ var dashboardView =
 {
 	container:'#main_container',
 	id:'dashboard_view',
+	callback:null,
+	rangeMax: 20,
+	averageMax: 20,
 	
 	demoStarted:false,
 	
@@ -10,14 +13,19 @@ var dashboardView =
 		return $('#'+this.id);
 	},
 	
+	init: function(callback)
+	{
+		dashboardView.callback = callback;
+	},
+	
 	startDemo:function()
 	{
 		dashboardView.data1 = [];
 		dashboardView.data2 = [];
 		var t = new Date();
-		for (var i = 60; i >= 0; i--) {
+		for (var i = 59; i >= 0; i--) {
 			var x = new Date(t.getTime() - i * 1000);
-			dashboardView.data1.push([x, Math.random()*20+90]);
+			dashboardView.data1.push([x, 0]);
 			dashboardView.data2.push([x, Math.random()*40+70]);
 		}
 		
@@ -25,31 +33,77 @@ var dashboardView =
 			document.getElementById("graphdiv1"),
 			dashboardView.data1,
 			{	// options
-				drawPoints: true,
-				valueRange: [0, 120],
-				labels: ['Time', 'Random']
+				valueRange: [0, dashboardView.rangeMax],
+				labels: ['Time', 'Quorum 1', 'Quorum 2', 'Quorum 3', 'Quorum 4'],
+				rollPeriod: 2,
+				logscale: false
 			}       
 		);
 		
-		dashboardView.g2 = new Dygraph(
-			document.getElementById("graphdiv2"),
-			dashboardView.data2,
-			{	// options
-				drawPoints: true,
-				valueRange: [0, 120],
-				labels: ['Time', 'Random']
-			}   
-		);
+		// dashboardView.g2 = new Dygraph(
+			// document.getElementById("graphdiv2"),
+			// dashboardView.data2,
+			// {	// options
+				// drawPoints: true,
+				// valueRange: [0, 120],
+				// labels: ['Time', 'Random']
+			// }   
+		// );
 		
 		setInterval(function() {
-			var x = new Date();  // current time
-			dashboardView.data1.push([x, Math.random()*20+90]);
-			dashboardView.data2.push([x, Math.random()*40+70]);
-			dashboardView.data1.shift();
-			dashboardView.data2.shift();
-			dashboardView.g1.updateOptions( { 'file': dashboardView.data1 } );
-			dashboardView.g2.updateOptions( { 'file': dashboardView.data2 } );
+			dashboardView.updateGraph();
 		}, 1000);
+	},
+	
+	getRangeMax: function(values, max)
+	{
+		for (var i in values)
+		{
+			if (values[i] > max)
+				max = values[i];
+		}
+
+		var scale = [1, 2, 5];
+		var norm = 1;
+		var mul = 1;
+		for (var j = 0; norm < max; j++)
+		{
+			if (j % scale.length == 0)
+				mul *= 10;
+			norm = scale[j % scale.length] * mul;
+		}
+		max = norm;		
+		return max;
+	},
+	
+	updateGraph: function()
+	{
+		if (dashboardView.callback == null)
+			return;
+
+		var date = new Date();  // current time
+		var deltas = dashboardView.callback();
+		dashboardView.rangeMax = dashboardView.getRangeMax(deltas, Math.floor(dashboardView.averageMax));
+		dashboardView.averageMax = ((dashboardView.averageMax * 60) + dashboardView.rangeMax) / 61.0;
+		var valueRange = [0, dashboardView.rangeMax];
+
+		deltas.splice(0, 0, date);
+		dashboardView.data1.push(deltas);
+		var labels = [];
+		for (var i = 0; i < deltas.length; i++)
+		{
+			if (i == 0)
+				labels.push("Time");
+			else
+				labels.push("Quorum " + i);
+		}
+		dashboardView.data1.shift();
+		dashboardView.g1.updateOptions(
+		{ 
+			file: dashboardView.data1,
+			valueRange: valueRange,
+			labels: labels
+		});
 	},
 	
 	update: function(configState)
@@ -62,7 +116,7 @@ var dashboardView =
 		if (!dashboardView.demoStarted)
 		{
 			dashboardView.demoStarted = true;
-			//dashboardView.startDemo();
+			dashboardView.startDemo();
 		}
 		
 		$("#dashboard_view_cluster_state")
