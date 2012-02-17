@@ -36,17 +36,22 @@ var databaseListView =
 		// DatabaseList
 		for(var i in configState.databases)
 		{
+			var databaseID = configState.databases[i].databaseID;
+			var databaseSize = databaseListView.calculateDatabaseSize(configState, databaseID);
+		
 			// find -> add / check,update,mark
-			var le = $('#database_list_view_box > div#database_list_item_' + configState.databases[i].databaseID);
+			var le = $('#database_list_view_box > div#database_list_item_' + databaseID);
 			if (le.length == 0)
 			{
 				// add new db
 				var le = htmlCodes.databaseListItem;
-				$(le).attr('id', 'database_list_item_' + configState.databases[i].databaseID)
+				$(le).attr('id', 'database_list_item_' + databaseID)
 					.attr('mark', 'ext')
 					.find('h2').html(configState.databases[i].name)
 					.end()
-					.find('span.databaseNumber').html(configState.databases[i].databaseID)
+					.find('span.databaseNumber').html(databaseID)
+					.end()
+					.find('span.databaseSize').html(utils.humanBytes(databaseSize))
 					.end()
 				.appendTo('#database_list_view_box');
 			}
@@ -78,5 +83,26 @@ var databaseListView =
 	createDatabase: function(data)
 	{
 		scaliendb.createDatabase(utils.removeSpaces(data.name));
-	}
+	},
+	
+	calculateDatabaseSize: function(configState, databaseID)
+	{
+		var size = 0;
+		var tables = {};
+		for (var i in configState.tables)
+		{
+			var table = configState.tables[i];
+			if (table["databaseID"] == databaseID)
+				tables[table["tableID"]] = table["tableID"];
+		}
+		
+		for (var i in configState.shards)
+		{
+			var shard = configState.shards[i];
+			if (tables.hasOwnProperty(shard["tableID"]))
+				size += shard["shardSize"];
+		}
+		return size;
+	},
+
 }

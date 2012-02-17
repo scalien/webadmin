@@ -46,6 +46,10 @@ var htmlCodes =
 				<span>Database number:</span>\
 				<span class="databaseNumber"></span>\
 			</div>\
+			<div>\
+				<span>Size:</span>\
+				<span class="databaseSize"></span>\
+			</div>\
 		</div>\
 	</div>',
 	tableListItem:
