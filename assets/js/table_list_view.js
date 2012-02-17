@@ -53,11 +53,10 @@ var tableListView =
 		// update list
 		// marking like .attr('mark', 'ext')
 		// TableList
-		for(var i in database.tables)
+		for (var i in database.tables)
 		{
 			var tableID = database.tables[i];
 			var table = scaliendb.getTable(configState, tableID);
-			
 			var details = tableListView.getTableDetails(table, configState);
 			
 			// find -> add / check,update,mark

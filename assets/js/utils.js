@@ -114,8 +114,8 @@ var utils =
 		return "" + val;
 	},
 	
-	caseInsensitiveCompare: function(a, b)
+	caseInsensitiveCompare: function(property, a, b)
 	{
-		return a["name"].toLowerCase().localeCompare(b["name"].toLowerCase());
+		return a[property].toLowerCase().localeCompare(b[property].toLowerCase());
 	}
 }	

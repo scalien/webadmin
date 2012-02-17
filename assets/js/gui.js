@@ -23,12 +23,44 @@ function init()
 	updateGui();
 }
 
+function sortConfigStateNames(configState)
+{
+	// sort database names
+	configState.databases.sort(function(a, b) {
+		return utils.caseInsensitiveCompare("name", a, b);
+	});
+
+	// sort table names inside databases
+	for (var d in configState.databases)
+	{
+		var database = configState.databases[d];
+		var tables = [];
+		
+		for (var i in database.tables)
+		{
+			var tableID = database.tables[i];
+			var table = scaliendb.getTable(configState, tableID);
+			tables.push(table);
+		}
+		
+		tables.sort(function(a, b) {
+			return utils.caseInsensitiveCompare("name", a, b);
+		});
+		
+		var sortedTableIDs = [];
+		for (var i in tables)
+		{
+			sortedTableIDs.push(tables[i].tableID);
+		}
+		
+		database.tables = sortedTableIDs;
+	}
+}
+
 function updateGui(configState)
 {
 	if (configState)
-	{
-		configState.databases.sort(utils.caseInsensitiveCompare);
-	}
+		sortConfigStateNames(configState);
 	
 	utils.trace({'updateGui':configState});
 
