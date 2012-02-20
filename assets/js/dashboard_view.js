@@ -55,12 +55,16 @@ var dashboardView =
 		}, 1000);
 	},
 	
-	getRangeMax: function(values, max)
+	getRangeMax: function(values)
 	{
+		var max = 0;
 		for (var i in values)
 		{
-			if (values[i] > max)
-				max = values[i];
+			for (var j = 1; j < values.length; j++)
+			{
+				if (values[i][j] > max)
+					max = values[i][j];
+			}
 		}
 
 		var scale = [1, 2, 5];
@@ -83,10 +87,6 @@ var dashboardView =
 
 		var date = new Date();  // current time
 		var deltas = dashboardView.callback();
-		dashboardView.rangeMax = dashboardView.getRangeMax(deltas, Math.floor(dashboardView.averageMax));
-		dashboardView.averageMax = ((dashboardView.averageMax * 60) + dashboardView.rangeMax) / 61.0;
-		var valueRange = [0, dashboardView.rangeMax];
-
 		deltas.splice(0, 0, date);
 		dashboardView.data1.push(deltas);
 		var labels = [];
@@ -98,6 +98,11 @@ var dashboardView =
 				labels.push("Quorum " + i);
 		}
 		dashboardView.data1.shift();
+
+		// recalculate scale
+		var rangeMax = dashboardView.getRangeMax(dashboardView.data1);
+		var valueRange = [0, rangeMax];
+		
 		dashboardView.g1.updateOptions(
 		{ 
 			file: dashboardView.data1,
