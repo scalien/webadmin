@@ -1,6 +1,7 @@
 var lastConfigState = null;
 var timer;
 var lastReplicationRounds = {};
+var lastCatchupBytes = {};
 
 // onLoad
 $(function() {
@@ -21,7 +22,10 @@ function init()
 	
 	scaliendb.developer = utils.parseDeveloperMode();
 	
-	dashboardView.init(getReplicationDeltas);
+	dashboardView.init({
+		replicationPerSeconds: getReplicationDeltas,
+		catchup: getCatchupDeltas
+	});
 	
 	updateGui();
 }
@@ -75,6 +79,33 @@ function getReplicationDeltas()
 		
 		lastReplicationRounds[quorum.quorumID] = quorum.paxosID;
 		deltas.push(diff);
+	}
+	return deltas;
+}
+
+function getCatchupDeltas()
+{
+	if (lastConfigState == null)
+		return;
+
+	var deltas = [];
+	for (var s in lastConfigState.shardServers)
+	{
+		var shardServer = lastConfigState.shardServers[s];
+		for (var q in shardServer.quorumInfos)
+		{
+			var quorumInfo = shardServer.quorumInfos[q];
+			if (!quorumInfo.isSendingCatchup)
+				continue;
+		
+			var key = shardServer.nodeID + "/" + quorumInfo.quorumID;
+			var diff = 0;
+			if (lastCatchupBytes.hasOwnProperty(key))
+				diff = quorumInfo.catchupBytesSent - lastCatchupBytes[key];
+		
+			lastCatchupBytes[key] = quorumInfo.catchupBytesSent;
+			deltas.push(diff);
+		}	
 	}
 	return deltas;
 }

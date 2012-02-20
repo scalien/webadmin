@@ -5,7 +5,10 @@ var dashboardView =
 	callback:null,
 	rangeMax: 20,
 	averageMax: 20,
-	
+	names: ["replicationPerSeconds", "catchup"],
+	views: {},
+	callbacks: {},
+	graphs: {},
 	demoStarted:false,
 	
 	getSelf: function()
@@ -13,11 +16,11 @@ var dashboardView =
 		return $('#'+this.id);
 	},
 	
-	init: function(callback)
+	init: function(callbacks)
 	{
-		dashboardView.callback = callback;
+		dashboardView.callbacks = callbacks;
 	},
-	
+
 	startDemo:function()
 	{
 		dashboardView.data1 = [];
@@ -26,7 +29,7 @@ var dashboardView =
 		for (var i = 59; i >= 0; i--) {
 			var x = new Date(t.getTime() - i * 1000);
 			dashboardView.data1.push([x, 0]);
-			dashboardView.data2.push([x, Math.random()*40+70]);
+			dashboardView.data2.push([x, 0]);
 		}
 		
 		dashboardView.g1 = new Dygraph(
@@ -35,23 +38,39 @@ var dashboardView =
 			{	// options
 				valueRange: [0, dashboardView.rangeMax],
 				labels: ['Time', 'Quorum 1', 'Quorum 2', 'Quorum 3', 'Quorum 4'],
-				rollPeriod: 2,
+				rollPeriod: 3,
+				fillGraph: true,
+				strokeWidth: 1,
 				logscale: false
 			}       
 		);
+		dashboardView.graphs["replicationPerSeconds"] = dashboardView.g1;
+		dashboardView.views["replicationPerSeconds"] = dashboardView.data1;
 		
-		// dashboardView.g2 = new Dygraph(
-			// document.getElementById("graphdiv2"),
-			// dashboardView.data2,
-			// {	// options
-				// drawPoints: true,
-				// valueRange: [0, 120],
-				// labels: ['Time', 'Random']
-			// }   
-		// );
+		dashboardView.g2 = new Dygraph(
+			document.getElementById("graphdiv2"),
+			dashboardView.data1,
+			{	// options
+				valueRange: [0, dashboardView.rangeMax],
+				labels: ['Time', 'Quorum 1', 'Quorum 2', 'Quorum 3', 'Quorum 4'],
+				rollPeriod: 3,
+				fillGraph: true,
+				strokeWidth: 1,
+				logscale: false,
+				axes: {
+				  y: {
+						axisLabelFormatter: function(x) {
+							return utils.humanBytes(x);
+					}
+				  }
+				}
+		}       
+		);
+		dashboardView.graphs["catchup"] = dashboardView.g2;
+		dashboardView.views["catchup"] = dashboardView.data2;
 		
 		setInterval(function() {
-			dashboardView.updateGraph();
+			dashboardView.updateGraphs();
 		}, 1000);
 	},
 	
@@ -80,8 +99,46 @@ var dashboardView =
 		return max;
 	},
 	
-	updateGraph: function()
+	updateGraph: function(data, graph, callback)
 	{
+		if (callback == null)
+			return;
+			
+		var date = new Date();  // current time
+		var deltas = callback();
+		deltas.splice(0, 0, date);
+		data.push(deltas);
+		var labels = [];
+		for (var i = 0; i < deltas.length; i++)
+		{
+			if (i == 0)
+				labels.push("Time");
+			else
+				labels.push("Quorum " + i);
+		}
+		data.shift();
+
+		// recalculate scale
+		var rangeMax = dashboardView.getRangeMax(data);
+		var valueRange = [0, rangeMax];
+		
+		graph.updateOptions(
+		{ 
+			file: data,
+			valueRange: valueRange,
+			labels: labels
+		});
+		
+	},
+	
+	updateGraphs: function()
+	{
+		for (var i in dashboardView.names)
+		{
+			var name = dashboardView.names[i];
+			dashboardView.updateGraph(dashboardView.views[name], dashboardView.graphs[name], dashboardView.callbacks[name]);
+		}
+/*
 		if (dashboardView.callback == null)
 			return;
 
@@ -109,6 +166,7 @@ var dashboardView =
 			valueRange: valueRange,
 			labels: labels
 		});
+*/
 	},
 	
 	update: function(configState)
@@ -126,7 +184,8 @@ var dashboardView =
 		
 		$("#dashboard_view_cluster_state")
 			.html("The ScalienDB cluster is " + scaliendb.getClusterState(configState))
-			.attr('class', "status-message " + scaliendb.getClusterState(configState));
+			//.attr('class', "status-message " + utils.getAlertStyle(scaliendb.getClusterState(configState)));
+			.attr('class', utils.getAlertStyle(scaliendb.getClusterState(configState)));
 		
 		dashboardView.updateAlerts(configState);
 	},
@@ -152,7 +211,7 @@ var dashboardView =
 			}
 			
 			has_alert = true;
-			
+			status_class = utils.getAlertStyle(status_class);
 			// find -> add / check,update,mark
 			var le = $('#dashboard_controller_alerts > div#dashboard_controller_alerts_item_' + configState.controllers[i].nodeID);
 			if (le.length == 0)
@@ -200,7 +259,7 @@ var dashboardView =
 			}
 			
 			has_alert = true;
-			
+			status_class = utils.getAlertStyle(status_class);			
 			// find -> add / check,update,mark
 			var le = $('#dashboard_shardserver_alerts > div#shardserver_list_item_' + configState.shardServers[i].nodeID);
 			if (le.length == 0)
