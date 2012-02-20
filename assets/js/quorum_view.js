@@ -65,15 +65,17 @@ var quorumView =
 		if (vw.find('span.explanation').html() != (details.explanation + '<br/>' + details.catchupText))
 			vw.find('span.explanation').html(details.explanation + '<br/>' + details.catchupText); 
 			
-		if (details.state != 'healthy')
-			$('#quorum_view_info').addClass('critical');
-		else
-			$('#quorum_view_info').removeClass('critical');
-			
+		// if (details.state != 'healthy')
+			// $('#quorum_view_info').addClass('critical');
+		// else
+			// $('#quorum_view_info').removeClass('critical');
+		
+		$('#quorum_view_info').attr('class', 'span9 ' + utils.getAlertStyle(details.state));
 		
 		// Shardservers
 		for(var i in details.shardservers)
 		{
+			var style = utils.getAlertStyle(details.shardservers[i].health);
 			// find -> add / check,update,mark
 			var le = $('#quorum_view_shardservers > div#shardserver_list_item_' + details.shardservers[i].nodeID);
 			if (le.length == 0)
@@ -82,7 +84,7 @@ var quorumView =
 				var le = htmlCodes.quorumShardserverListItem;
 				$(le).attr('id', 'shardserver_list_item_' + details.shardservers[i].nodeID)
 					.attr('mark', 'ext')
-					.attr('class', details.shardservers[i].health)
+					.attr('class', style)
 					.find('span.node_id').html(details.shardservers[i].nodeID)
 					.end()
 					.find('span.pri').html(details.shardservers[i].pri)
@@ -100,8 +102,8 @@ var quorumView =
 			{
 				le.attr('mark', 'ext');
 				// check for rename,update,mark
-				if (le.attr('class') != details.shardservers[i].health)
-					le.attr('class', details.shardservers[i].health);
+				if (le.attr('class') != style)
+					le.attr('class', style);
 				
 				if (le.find('span.node_id').html() != details.shardservers[i].nodeID)
 					le.find('span.node_id').html(details.shardservers[i].nodeID);

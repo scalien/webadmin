@@ -52,6 +52,7 @@ var serverListView =
 				status_msg = 'No heartbeat';
 			}
 			
+			status_class = utils.getAlertStyle(status_class);
 			// find -> add / check,update,mark
 			var le = $('#controller_list_view_box > div#controller_list_item_' + configState.controllers[i].nodeID);
 			if (le.length == 0)
@@ -110,6 +111,7 @@ var serverListView =
 				status_msg = 'No heartbeat';
 			}
 			
+			status_class = utils.getAlertStyle(status_class);
 			// find -> add / check,update,mark
 			var le = $('#shardserver_list_view_box > div#shardserver_list_item_' + configState.shardServers[i].nodeID);
 			if (le.length == 0)
