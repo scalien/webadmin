@@ -27,9 +27,10 @@ span#controller_info_stripe {
     padding: 14px 20px 12px;
 }
 
-div.sidebar {
-	border: 1px solid #222222;
-	border-radius: 6px;
+
+div.sidebar  {
+	border: 1px solid #DDDDDD;
+	border-radius: 2px;
 	min-height:620px;
 	overflow:hidden;
 	float:none;
@@ -37,8 +38,8 @@ div.sidebar {
 }
 
 div.content {
-	border: 1px solid #222222;
-	border-radius: 6px;
+	border: 1px solid #DDDDDD;
+	border-radius: 2px;
 	min-height:800px;
 }
 
@@ -104,7 +105,7 @@ span.status-message.unhealthy {
 span.status-message.critical {
 	background-color:#993333;
 }
-
+/*
 div#dashboard_controller_alerts > div, div#dashboard_shardserver_alerts > div
 {
 	background-color:#ff9900;
@@ -116,14 +117,15 @@ div#dashboard_controller_alerts > div, div#dashboard_shardserver_alerts > div
 	display:inline-block;
 	margin:4px 0px 4px 30px;
 }
-
+*/
 /* QuorumView */
 
+/*
 div#quorum_view_info{
 	border-radius: 8px 8px 8px 8px;
 	padding:6px;
 }
-
+*/
 div#quorum_view_info.critical{
 	background-color:#993333;
 }
@@ -133,9 +135,9 @@ div#quorum_view_shards span.shard-number {
 	margin:2px;
 	border-radius: 2px 2px 2px 2px;
     box-shadow: 1px 1px 2px -1px #000000;
-	background-color:#bbbbff;
+	background-color:#d1eed1;
 }
-
+/*
 div#quorum_view_shardservers > div {
 	border-radius: 8px 8px 8px 8px;
     box-shadow: 2px 2px 5px -2px #000000;
@@ -153,13 +155,14 @@ div#quorum_view_shardservers > div.healthy{
 div#quorum_view_shardservers > div.no-heartbeat{
 	background-color:#ff9900;
 }
-
+*/
 div#quorum_view_shardservers a.activate {
 	cursor:pointer;
 }
 
 /* ServerList */
 
+/*
 div#controller_list_view_box > div, div#shardserver_list_view_box > div {
 	border-radius: 8px 8px 8px 8px;
     box-shadow: 2px 2px 5px -2px #000000;
@@ -181,7 +184,7 @@ div#controller_list_view_box > div.healthy, div#shardserver_list_view_box > div.
 div#controller_list_view_box > div.no-heartbeat, div#shardserver_list_view_box > div.no-heartbeat{
 	background-color:#ff9900;
 }
-
+*/
 div#controller_list_view_box > div > span.node_id, div#shardserver_list_view_box > div > span.node_id {
 	width:40px;
 	display:inline-block;

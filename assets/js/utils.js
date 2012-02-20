@@ -117,5 +117,23 @@ var utils =
 	caseInsensitiveCompare: function(property, a, b)
 	{
 		return a[property].toLowerCase().localeCompare(b[property].toLowerCase());
+	},
+	
+	getAlertStyle: function(style)
+	{
+		switch (style)
+		{
+		case "healthy":
+			return "alert-message block-message success";
+		case "unhealthy":
+			return "alert-message block-message warning";
+		case "critical":
+		case "no-heartbeat":
+			return "alert-message block-message error";
+		case "master":
+			return "alert-message block-message info";
+		default:
+			return style;
+		}
 	}
 }	
