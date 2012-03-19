@@ -26,7 +26,7 @@ var scaliendb =
 	
 	getQuorumState: function(quorum)
 	{
-		if (quorum["hasPrimary"] == "true")
+		if (quorum["hasPrimary"] == true)
 		{
 			if (quorum["inactiveNodes"].length == 0)
 				state = "healthy";

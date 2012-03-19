@@ -104,7 +104,7 @@ var quorumListView =
 		details.name = quorum.name;
 		details.quorumID = quorum.quorumID;
 		
-		if (quorum["hasPrimary"] == "true")
+		if (quorum["hasPrimary"] == true)
 			details.primaryID = quorum["primaryID"];
 		else
 			details.primaryID = null;
