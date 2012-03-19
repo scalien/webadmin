@@ -15,12 +15,12 @@ var inputFieldsDialog =
 		this.getSelf().dialog({ autoOpen: false, width:500, title:"Input", resizable:false, zIndex:15000, modal:true,
 			buttons: { 'Ok': this.onOk, 'Cancel': this.onCancel } });
 			
-		this.getSelf().keydown(function(e) {
-			//alert(e.keyCode);
+		this.getSelf().keydown((function(that) { return function(e) {
 			if (e.keyCode == 13) {
-				inputFieldsDialog.onOk();
+				that.onOk();
+				e.preventDefault();
 			}
-		});
+		}})(this));
 	},
 	
 	addField: function(fieldName, fieldType, visibleName, value, filter)
