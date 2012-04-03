@@ -12,7 +12,7 @@ var inputFieldsDialog =
 	
 	init: function()
 	{		
-		this.getSelf().dialog({ autoOpen: false, width:500, title:"Input", resizable:false, zIndex:15000, modal:true,
+		this.getSelf().dialog({ autoOpen: false, width:500, title:"Input", resizable:false, zIndex:15000, modal:true, draggable: false, position: ['center', 200],
 			buttons: { 'Ok': this.onOk, 'Cancel': this.onCancel } });
 			
 		this.getSelf().keydown((function(that) { return function(e) {
@@ -92,7 +92,7 @@ var inputFieldsDialog =
 			
 		this.getSelf().dialog( 'option', 'title', title );
 		
-		$('#'+this.id+'_legend').html(title);	
+		//$('#'+this.id+'_legend').html(title);	
 		$('#'+this.formId + ' > fieldset > :not(legend)').remove();
 	},
 	
