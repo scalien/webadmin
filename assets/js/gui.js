@@ -11,11 +11,18 @@ $(function() {
 	$('#logout_button').click(logout);
 	
 	init();
-	showLogin();
+	if (scaliendb.controller == "")
+		showLogin();
+	else
+		connect();
 });
 
 function init()
 {
+	var args = utils.parseQueryString();
+	if (args.hasOwnProperty("controller"))
+		scaliendb.controller = args["controller"];
+	
 	scaliendb.onDisconnect = onDisconnect;
 	scaliendb.onResponse = onResponse;
 	scaliendb.disconnect();
@@ -66,10 +73,11 @@ function sortConfigStateNames(configState)
 
 function getReplicationDeltas()
 {
-	if (lastConfigState == null)
-		return;
-
 	var deltas = [];
+
+	if (lastConfigState == null)
+		return deltas;
+
 	for (var q in lastConfigState.quorums)
 	{
 		var quorum = lastConfigState.quorums[q];
@@ -210,6 +218,16 @@ function onFindMaster(obj)
 		controller = controller + "/json/";
 	if (controller !== scaliendb.controller)
 		scaliendb.controller = controller;
+		
+	var args = utils.parseQueryString();
+	if (!args.hasOwnProperty("controller") || args["controller"] != scaliendb.controller)
+	{
+		// redirect
+		var href = window.location.href.substring(0, window.location.href.lastIndexOf('?'));
+		href += "?" + "controller" + "=" + encodeURIComponent(scaliendb.controller);
+		window.location.href = href;
+	}
+
 
 	updateConfigState();
 }

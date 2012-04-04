@@ -1,6 +1,7 @@
 var scaliendb = 
 {
 	controller: "",
+	controllers: [],
 	developer: false,
 	onResponse: this.showResult,
 	onDisconnect: this.showError,
