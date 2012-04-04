@@ -136,10 +136,16 @@ var quorumListView =
 					details.catchupText += "Shard server " + nodeID + " is sending catchup: " + utils.humanBytes(quorumInfo["catchupBytesSent"]) + "/" + utils.humanBytes(quorumInfo["catchupBytesTotal"]) + " (" + utils.humanBytes(quorumInfo["catchupThroughput"]) + "/s)";
 			}
 			
+			var paxosID = details.paxosID;
+			if (paxosID == "unknown" && quorumInfo != null && quorumInfo.hasOwnProperty("paxosID"))
+			{
+				paxosID = quorumInfo["paxosID"];
+			}
+			
 			details.shardservers.push({
 				'nodeID':nodeID,
 				'pri':priority,
-				'repl':(details.paxosID !== "unknown") ? details.paxosID : quorumInfo["paxosID"],
+				'repl':paxosID,
 				'primary':(nodeID == details.primaryID),
 				'health':(shardServer["hasHeartbeat"] ? "healthy" : "no-heartbeat"),
 				'hasActivate':false});
