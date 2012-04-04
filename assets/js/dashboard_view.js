@@ -38,7 +38,7 @@ var dashboardView =
 			{	// options
 				valueRange: [0, dashboardView.rangeMax],
 				labels: ['Time', 'Quorum 1', 'Quorum 2', 'Quorum 3', 'Quorum 4'],
-				rollPeriod: 3,
+				rollPeriod: 1,
 				fillGraph: true,
 				strokeWidth: 1,
 				logscale: false
@@ -53,15 +53,18 @@ var dashboardView =
 			{	// options
 				valueRange: [0, dashboardView.rangeMax],
 				labels: ['Time', 'Quorum 1', 'Quorum 2', 'Quorum 3', 'Quorum 4'],
-				rollPeriod: 3,
+				rollPeriod: 4,
 				fillGraph: true,
 				strokeWidth: 1,
 				logscale: false,
 				axes: {
 				  y: {
 						axisLabelFormatter: function(x) {
-							return utils.humanBytes(x);
-					}
+							return utils.humanBytes(x) + "B/s";
+						},
+						valueFormatter: function(x) {
+							return utils.humanBytes(x) + "B/s";
+						}
 				  }
 				}
 		}       
@@ -89,7 +92,7 @@ var dashboardView =
 		var scale = [1, 2, 5];
 		var norm = 1;
 		var mul = 1;
-		for (var j = 0; norm < max; j++)
+		for (var j = 0; norm < max * 1.1; j++)
 		{
 			if (j % scale.length == 0)
 				mul *= 10;
