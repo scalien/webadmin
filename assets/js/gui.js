@@ -147,10 +147,24 @@ function updateGui(configState)
 	dashboardView.update(configState);
 }
 
+function clearQueryStringConnection()
+{
+	var args = utils.parseQueryString();
+	if (args.hasOwnProperty("controller"))
+	{
+		// redirect
+		var controller = "controller" + "=" + encodeURIComponent(scaliendb.controller);
+		var href = window.location.href.replace(controller, "");
+		window.location.href = href;
+	}
+}
+
 function logout()
 {
 	clearTimeout(timer);
 	init();
+	clearQueryStringConnection();
+	// control may never get here
 	showLogin();
 }
 
